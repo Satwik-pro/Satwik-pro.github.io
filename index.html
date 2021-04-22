@@ -1,0 +1,111 @@
+<h1 style = "color:red; font-size:50px;">Get Ready To Fight</h1>
+<head>
+    <style>
+            body {
+                background-image: url('C:/Users/Satwik/Downloads/background.jpg');
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: cover;
+            }
+    </style>
+</head>
+<canvas id = "my-canvas" width=650 height=650></canvas>
+<button id="kick" style = "color:black">Kick (Up Arrow Key)</button>
+<button id="punch" style = "color:black">Punch (Right Arrow Key)</button>
+<button id="forward" style = "color:black">Forward (Enter Key)</button>
+<button id="backward" style = "color:black">Backward (Left Arrow Key)</button>
+<button id="block" style = "color:black">Block (Down Arrow Key)</button>
+<script type = "text/javascript">
+    
+    let c = document.getElementById("my-canvas");
+    let ctx = c.getContext("2d");
+
+    let loadImage = (src, callback) => {
+        let img = document.createElement("img");
+        img.onload = () => callback(img);
+        img.src = src;
+    }
+
+    let imagePath = (frameNumber, animation) => {
+        return "C:/Users/Satwik/Downloads/" + animation + "/" + frameNumber + ".png";
+    };
+
+    let frames = {
+        idle: [1, 2, 3, 4, 5, 6, 7, 8],
+        kick: [1, 2, 3, 4, 5, 6, 7],
+        punch: [1, 2, 3, 4, 5, 6, 7],
+        forward: [1, 2, 3, 4, 5, 6],
+        backward: [1, 2, 3, 4, 5, 6],
+        block: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    };
+
+    let loadImages = (callback) => {
+        let images = { idle: [], kick: [], punch: [], forward: [], backward: [], block: []};
+        let imagesToLoad = 0;
+        ["idle", "kick", "punch", "forward", "backward", "block"].forEach((animation) => {
+            let animationFrames = frames[animation];
+            imagesToLoad = imagesToLoad + animationFrames.length;
+            animationFrames.forEach((frameNumber) => {
+                let path = imagePath(frameNumber, animation);
+                loadImage(path, (image) => {
+                images[animation][frameNumber - 1] = image;
+                imagesToLoad = imagesToLoad - 1;
+                if(imagesToLoad === 0)
+                callback(images);
+                }); 
+            });
+        });
+    };
+
+    let animate = (ctx, images, animation, callback) => {
+        images[animation].forEach((image,index) => {
+            setTimeout(() => {
+                ctx.clearRect(0, 0, 650, 650);
+                ctx.drawImage(image, 0, 0, 650, 650);
+            }, index * 100);
+        });
+        setTimeout(callback, images[animation].length * 100);
+    }
+
+    loadImages((images) => {
+        let queuedAnimations = [];
+        let aux = () => {
+            let selectedAnimation;
+            if(queuedAnimations.length === 0)
+            selectedAnimation = "idle";
+            else
+            selectedAnimation = queuedAnimations.shift();
+            animate(ctx, images, selectedAnimation, aux)
+        }
+        aux();
+        document.getElementById("kick").onclick = () => {
+            queuedAnimations.push("kick");
+        };
+        document.getElementById("punch").onclick = () => {
+            queuedAnimations.push("punch");
+        };
+        document.getElementById("forward").onclick = () => {
+            queuedAnimations.push("forward");
+        };
+        document.getElementById("backward").onclick = () => {
+            queuedAnimations.push("backward");
+        };
+        document.getElementById("block").onclick = () => {
+            queuedAnimations.push("block");
+        };
+        document.addEventListener("keyup", (event) => {
+            const key = event.key;
+            if(key === "ArrowRight")
+            queuedAnimations.push("punch");
+            else if(key === "ArrowUp")
+            queuedAnimations.push("kick");
+            else if(key === "Enter")
+            queuedAnimations.push("forward");
+            else if(key === "ArrowLeft")
+            queuedAnimations.push("backward");
+            else if(key === "ArrowDown")
+            queuedAnimations.push("block");
+        });
+     });
+    
+</script>
