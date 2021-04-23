@@ -1,22 +1,45 @@
-<h1 style = "color:red; font-size:50px;">Get Ready To Fight</h1>
+<div style="clear:both;">
+    <h1 style = "color:black; font-size:50px;text-align:left;float:left;">Get Ready To Fight</h1>
+    <h1 style = "color:red; font-size:50px;text-align:right;float:right;margin-right:250px;">Get Ready To Fight</h1>
+</div>
 <head>
     <style>
-        body {
-            background-image: url('https://github.com/Satwik-pro/Satwik-pro.github.io/blob/main/background.jpg?raw=true');
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: cover;
-        }
+            body {
+                background-image: url('https://github.com/Satwik-pro/Satwik-pro.github.io/blob/main/background.jpg?raw=true');
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: cover;
+            }
+            h1 {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        font-size: 100%;
+        vertical-align: baseline;
+        background: transparent;
+    }
     </style>
 </head>
+
 <canvas id = "my-canvas" width=650 height=650></canvas>
-<button id="kick" style = "color:black">Kick (Up Arrow Key)</button>
-<button id="punch" style = "color:black">Punch (Right Arrow Key)</button>
-<button id="forward" style = "color:black">Forward (Enter Key)</button>
-<button id="backward" style = "color:black">Backward (Left Arrow Key)</button>
-<button id="block" style = "color:black">Block (Down Arrow Key)</button>
+<canvas id = "my-canvas2" width=650 height=650></canvas>
+
+<br><br><br>
+
+<button id="kicko" style = "background-color:black;color:white">Kick (W Key)</button>
+<button id="puncho" style = "background-color:black;color:white">Punch (D Key)</button>
+<button id="forwardo" style = "background-color:black;color:white">Forward (X Key)</button>
+<button id="backwardo" style = "background-color:black;color:white">Backward (A Key)</button>
+<button id="blocko" style = "background-color:black;color:white">Block (S Key)</button>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;
+<button id="kick" style = "background-color:red;color:white">Kick (Up Arrow Key)</button>
+<button id="punch" style = "background-color:red;color:white">Punch (Left Arrow Key)</button>
+<button id="forward" style = "background-color:red;color:white">Forward (Enter Key)</button>
+<button id="backward" style = "background-color:red;color:white">Backward (Right Arrow Key)</button>
+<button id="block" style = "background-color:red;color:white">Block (Down Arrow Key)</button>
+
 <script type = "text/javascript">
-    
     let c = document.getElementById("my-canvas");
     let ctx = c.getContext("2d");
 
@@ -78,6 +101,101 @@
             animate(ctx, images, selectedAnimation, aux)
         }
         aux();
+        document.getElementById("kicko").onclick = () => {
+            queuedAnimations.push("kick");
+        };
+        document.getElementById("puncho").onclick = () => {
+            queuedAnimations.push("punch");
+        };
+        document.getElementById("forwardo").onclick = () => {
+            queuedAnimations.push("forward");
+        };
+        document.getElementById("backwardo").onclick = () => {
+            queuedAnimations.push("backward");
+        };
+        document.getElementById("blocko").onclick = () => {
+            queuedAnimations.push("block");
+        };
+        document.addEventListener("keypress", (event) => {
+            const key = event.key;
+            if(key === "d")
+            queuedAnimations.push("punch");
+            else if(key === "w")
+            queuedAnimations.push("kick");
+            else if(key === "x")
+            queuedAnimations.push("forward");
+            else if(key === "a")
+            queuedAnimations.push("backward");
+            else if(key === "s")
+            queuedAnimations.push("block");
+        });
+     });
+</script>
+
+<script type = "text/javascript">
+    
+    let co = document.getElementById("my-canvas2");
+    let ctxo = co.getContext("2d");
+
+    let loadImageo = (src, callback) => {
+        let imgo = document.createElement("img");
+        imgo.onload = () => callback(imgo);
+        imgo.src = src;
+    }
+
+    let imagePatho = (frameNumbero, animationo) => {
+        return "https://github.com/Satwik-pro/Satwik-pro.github.io/blob/main/r" + animationo + frameNumbero + ".png?raw=true";
+    };
+
+    let frameso = {
+        idle: [1, 2, 3, 4, 5, 6, 7, 8],
+        kick: [1, 2, 3, 4, 5, 6, 7],
+        punch: [1, 2, 3, 4, 5, 6, 7],
+        forward: [1, 2, 3, 4, 5, 6],
+        backward: [1, 2, 3, 4, 5, 6],
+        block: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    };
+
+    let loadImageso = (callback) => {
+        let imageso = { idle: [], kick: [], punch: [], forward: [], backward: [], block: []};
+        let imagesToLoado = 0;
+        ["idle", "kick", "punch", "forward", "backward", "block"].forEach((animationo) => {
+            let animationFrameso = frameso[animationo];
+            imagesToLoado = imagesToLoado + animationFrameso.length;
+            animationFrameso.forEach((frameNumbero) => {
+                let patho = imagePatho(frameNumbero, animationo);
+                loadImageo(patho, (imageo) => {
+                imageso[animationo][frameNumbero - 1] = imageo;
+                //
+                imagesToLoado = imagesToLoado - 1;
+                if(imagesToLoado === 0)
+                callback(imageso);
+                }); 
+            });
+        });
+    };
+
+    let animateo = (ctxo, imageso, animationo, callback) => {
+        imageso[animationo].forEach((imageo,index) => {
+            setTimeout(() => {
+                ctx.clearRect(0, 0, 650, 650);
+                ctx.drawImage(imageo, 0, 0, 650, 650);
+            }, index * 100);
+        });
+        setTimeout(callback, imageso[animationo].length * 100);
+    }
+
+    loadImageso((imageso) => {
+        let queuedAnimations = [];
+        let aux = () => {
+            let selectedAnimation;
+            if(queuedAnimations.length === 0)
+            selectedAnimation = "idle";
+            else
+            selectedAnimation = queuedAnimations.shift();
+            animate(ctxo, imageso, selectedAnimation, aux)
+        }
+        aux();
         document.getElementById("kick").onclick = () => {
             queuedAnimations.push("kick");
         };
@@ -96,16 +214,15 @@
         document.addEventListener("keyup", (event) => {
             const key = event.key;
             if(key === "ArrowRight")
-            queuedAnimations.push("punch");
+            queuedAnimations.push("backward");
             else if(key === "ArrowUp")
             queuedAnimations.push("kick");
             else if(key === "Enter")
             queuedAnimations.push("forward");
             else if(key === "ArrowLeft")
-            queuedAnimations.push("backward");
+            queuedAnimations.push("punch");
             else if(key === "ArrowDown")
             queuedAnimations.push("block");
         });
      });
-    
 </script>
