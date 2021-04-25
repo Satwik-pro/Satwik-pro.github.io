@@ -1,5 +1,5 @@
 <div style="clear:both;">
-    <h1 style = "color:black; font-size:50px;text-align:left;float:left;">Get Ready To Fight</h1>
+    <h1 style = "color:black; font-size:50px;text-align:left;float:left;margin-left:100px">Get Ready To Fight</h1>
     <h1 style = "color:red; font-size:50px;text-align:right;float:right;margin-right:250px;">Get Ready To Fight</h1>
 </div>
 <head>
@@ -22,8 +22,7 @@
     </style>
 </head>
 
-<canvas id = "my-canvas" width=650 height=650></canvas>
-<canvas id = "my-canvas2" width=650 height=650></canvas>
+<canvas id = "my-canvas" width=1300 height=650 style="margin-left: 20px;"></canvas>
 
 <br><br><br>
 
@@ -80,11 +79,19 @@
         });
     };
 
+    let poso = 0;
+
     let animate = (ctx, images, animation, callback) => {
+
+        if(animation === "forward")
+        poso += 30;
+        else if(animation === "backward")
+        poso -= 30;
+
         images[animation].forEach((image,index) => {
             setTimeout(() => {
-                ctx.clearRect(0, 0, 650, 650);
-                ctx.drawImage(image, 0, 0, 650, 650);
+                ctx.clearRect(poso, 0, 650, 650);
+                ctx.drawImage(image, poso, 0, 650, 650);
             }, index * 100);
         });
         setTimeout(callback, images[animation].length * 100);
@@ -98,7 +105,7 @@
             selectedAnimation = "idle";
             else
             selectedAnimation = queuedAnimations.shift();
-            animate(ctx, images, selectedAnimation, aux)
+            animate(ctx, images, selectedAnimation, aux);
         }
         aux();
         document.getElementById("kicko").onclick = () => {
@@ -130,12 +137,6 @@
             queuedAnimations.push("block");
         });
      });
-</script>
-
-<script type = "text/javascript">
-    
-    let co = document.getElementById("my-canvas2");
-    let ctxo = co.getContext("2d");
 
     let loadImageo = (src, callback) => {
         let imgo = document.createElement("img");
@@ -166,7 +167,6 @@
                 let patho = imagePatho(frameNumbero, animationo);
                 loadImageo(patho, (imageo) => {
                 imageso[animationo][frameNumbero - 1] = imageo;
-                //
                 imagesToLoado = imagesToLoado - 1;
                 if(imagesToLoado === 0)
                 callback(imageso);
@@ -175,11 +175,19 @@
         });
     };
 
-    let animateo = (ctxo, imageso, animationo, callback) => {
+    let pos = 650; 
+
+    let animateo = (ctx, imageso, animationo, callback) => {
+
+        if(animationo === "forward")
+        pos -= 30;
+        else if(animationo === "backward")
+        pos += 30;
+
         imageso[animationo].forEach((imageo,index) => {
             setTimeout(() => {
-                ctx.clearRect(0, 0, 650, 650);
-                ctx.drawImage(imageo, 0, 0, 650, 650);
+                ctx.clearRect(pos, 0, 650, 650);
+                ctx.drawImage(imageo, pos, 0, 650, 650);
             }, index * 100);
         });
         setTimeout(callback, imageso[animationo].length * 100);
@@ -193,7 +201,7 @@
             selectedAnimation = "idle";
             else
             selectedAnimation = queuedAnimations.shift();
-            animate(ctxo, imageso, selectedAnimation, aux)
+            animateo(ctx, imageso, selectedAnimation, aux);
         }
         aux();
         document.getElementById("kick").onclick = () => {
