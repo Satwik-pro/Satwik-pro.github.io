@@ -84,9 +84,9 @@
     let animate = (ctx, images, animation, callback) => {
 
         if(animation === "forward")
-        poso += 30;
+        poso += 40;
         else if(animation === "backward")
-        poso -= 30;
+        poso -= 40;
 
         images[animation].forEach((image,index) => {
             setTimeout(() => {
@@ -180,9 +180,9 @@
     let animateo = (ctx, imageso, animationo, callback) => {
 
         if(animationo === "forward")
-        pos -= 30;
+        pos -= 40;
         else if(animationo === "backward")
-        pos += 30;
+        pos += 40;
 
         imageso[animationo].forEach((imageo,index) => {
             setTimeout(() => {
